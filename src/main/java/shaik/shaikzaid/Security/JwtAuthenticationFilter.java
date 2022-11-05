@@ -1,5 +1,6 @@
 package shaik.shaikzaid.Security;
 
+import org.apache.catalina.filters.ExpiresFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -40,10 +41,12 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
                 authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                 SecurityContextHolder.getContext().setAuthentication(authentication);
+
             }
         } catch (Exception ex) {
-
+         logger.error("Could not set user authentication is security context",ex);
         }
+        filterChain.doFilter(request,response);
     }
 
         private String getJWTfromrequest (HttpServletRequest request){
@@ -56,4 +59,4 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             return null;
         }
     }
-}
+
